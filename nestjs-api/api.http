@@ -1,0 +1,38 @@
+@host=http://localhost
+@port=3000
+@consultaOrigem=Av Governador Valadares, 1000, Betim
+@consultaDestino=Av Amazonas, 1000, Belo Horizonte
+
+@originId=
+@destinationId=
+
+### Consulta Origem
+# @name getOrigin
+GET {{host}}:{{port}}/places?text={{consultaOrigem}}
+
+@originId = {{ getOrigin.response.body.candidates[0].place_id }}
+
+### Consulta Destino
+# @name getDestination
+GET {{host}}:{{port}}/places?text={{consultaDestino}}
+
+@destinationId = {{ getDestination.response.body.candidates[0].place_id }}
+
+### GET /places/{originId}/routes/{destinationId}
+GET {{host}}:{{port}}/directions?originId={{originId}}&destinationId={{destinationId}}
+
+### POST /routes
+POST {{host}}:{{port}}/routes
+Content-Type: application/json
+
+{
+  "name": "Rota 1",
+  "source_id": "{{ originId }}",
+  "destination_id": "{{ destinationId }}"
+}
+
+### GET /routes
+GET {{host}}:{{port}}/routes
+
+### GET /routes/{id}
+GET {{host}}:{{port}}/routes/6758ae1443b4ff7d3c052d22
