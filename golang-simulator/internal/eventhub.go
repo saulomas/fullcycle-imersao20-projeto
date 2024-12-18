@@ -98,6 +98,8 @@ func (eh *EventHub) handleDeliveryStarted(event DeliveryStartedEvent) error {
 		return err
 	}
 
+	fmt.Printf("DriverMovedEvent created: %+v\n", event)
+
 	go eh.sendDirections() //goroute - thread leve gerenciado pelo go
 
 	// ler o canal publicar no apache kafka

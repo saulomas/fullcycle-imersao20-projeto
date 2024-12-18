@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/saulomas/fullcycle-imersao20/internal"
 	"github.com/segmentio/kafka-go"
@@ -12,9 +13,14 @@ import (
 )
 
 func main() {
-	// print("Hello, World!")
-	mongoStr := "mongodb://admin:admin@localhost:27017/routes?authSource=admin"
-	mongoConnection, err := mongo.Connect(context.Background(), options.Client().ApplyURI(mongoStr))
+	mongoURI := getEnv("MONGO_URI", "mongodb://admin:admin@mongo:27017/routes?authSource=admin")
+	kafkaBroker := getEnv("KAFKA_BROKER", "kafka:9092")
+	kafkaRouteTopic := getEnv("KAFKA_ROUTE_TOPIC", "route")
+	kafkaFreightTopic := getEnv("KAFKA_FREIGHT_TOPIC", "freight")
+	kafkaSimulationTopic := getEnv("KAFKA_SIMULATION_TOPIC", "simulation")
+	kafkaGroupID := getEnv("KAFKA_GROUP_ID", "route-group")
+
+	mongoConnection, err := mongo.Connect(context.Background(), options.Client().ApplyURI(mongoURI))
 
 	if err != nil {
 		panic(err)
@@ -24,24 +30,23 @@ func main() {
 	routeService := internal.NewRouteService(mongoConnection, freightService)
 
 	chDriverMoved := make(chan *internal.DriverMovedEvent)
-	kafkaBroker := "localhost:9092"
 
 	freightWriter := &kafka.Writer{
 		Addr:     kafka.TCP(kafkaBroker),
-		Topic:    "freight",
+		Topic:    kafkaFreightTopic,
 		Balancer: &kafka.LeastBytes{},
 	}
 
 	simulatorWriter := &kafka.Writer{
 		Addr:     kafka.TCP(kafkaBroker),
-		Topic:    "simulator",
+		Topic:    kafkaSimulationTopic,
 		Balancer: &kafka.LeastBytes{},
 	}
 
 	routeReader := kafka.NewReader(kafka.ReaderConfig{
 		Brokers: []string{kafkaBroker},
-		Topic:   "route",
-		GroupID: "simulator",
+		Topic:   kafkaRouteTopic,
+		GroupID: kafkaGroupID,
 	})
 
 	hub := internal.NewEventHub(routeService, mongoConnection, chDriverMoved, freightWriter, simulatorWriter)
@@ -59,18 +64,14 @@ func main() {
 			err = hub.HandleEvent(m.Value)
 			if err != nil {
 				log.Printf("Error handling event: %v\n", err)
-			}			
+			}
 		}(m.Value)
 	}
-		
-	// routeCreatedEvent := internal.NewRouteCreatedEvent(
-	// 	"1",
-	// 	100,
-	// 	[]internal.Directions{
-	// 		{Lat: 0, Lng: 0},
-	// 		{Lat: 10, Lng: 10},
-	// 	},
-	// )
+}
 
-	// fmt.Println(internal.RouteCreatedHandler(routeCreatedEvent, routeService))
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
 }
