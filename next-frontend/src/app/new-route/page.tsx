@@ -3,13 +3,13 @@ import { NewRouteForm } from "./NewRouteForm";
 
 export async function searchDirections(source: string, destination: string) {
   const [sourceResponse, destinationResponse] = await Promise.all([
-    fetch(`${process.env.NEXT_PUBLIC_NEST_API_URL}/places?text=${source}`, {
+    fetch(`${process.env.NEST_API_URL}/places?text=${source}`, {
       // cache: "force-cache", //default
       // next: {
       //   revalidate: 1 * 60 * 60 * 24, // 1 dia
       // }
     }),
-    fetch(`${process.env.NEXT_PUBLIC_NEST_API_URL}/places?text=${destination}`, {
+    fetch(`${process.env.NEST_API_URL}/places?text=${destination}`, {
       // cache: "force-cache", //default
       // next: {
       //   revalidate: 1 * 60 * 60 * 24, // 1 dia
@@ -36,7 +36,7 @@ export async function searchDirections(source: string, destination: string) {
   const placeDestinationId = destinationData.candidates[0].place_id;
 
   const directionsResponse = await fetch(
-    `${process.env.NEXT_PUBLIC_NEST_API_URL}/directions?originId=${placeSourceId}&destinationId=${placeDestinationId}`,
+    `${process.env.NEST_API_URL}/directions?originId=${placeSourceId}&destinationId=${placeDestinationId}`,
     {
       // cache: "force-cache", //default
       // next: {

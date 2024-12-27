@@ -6,7 +6,7 @@ export async function GET(
 ) {
   const { routeId } = await params;
   console.log("routeId: ", routeId);
-  const response = await fetch(`${process.env.NEXT_PUBLIC_NEST_API_URL}/routes/${routeId}`, {
+  const response = await fetch(`${process.env.NEST_API_URL}/routes/${routeId}`, {
     // cache: "force-cache",
     // next: {
     //   tags: [`routes-${routeId}`, "routes"],

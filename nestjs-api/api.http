@@ -1,7 +1,7 @@
 @host=http://localhost
 @port=3000
-@consultaOrigem=Av Governador Valadares, 1000, Betim
-@consultaDestino=Av Amazonas, 1000, Belo Horizonte
+@consultaOrigem=Avenida Lisboa, 234, Contagem, MG
+@consultaDestino=Rua Carlos da Cunha Peixoto, 108, Jequitinhonha, MG
 
 @originId=
 @destinationId=
@@ -26,10 +26,14 @@ POST {{host}}:{{port}}/routes
 Content-Type: application/json
 
 {
-  "name": "Rota 1",
+  "name": "Contagem > Jequi 3",
   "source_id": "{{ originId }}",
   "destination_id": "{{ destinationId }}"
 }
+
+### POST /routes/{:id}/start
+
+POST {{host}}:{{port}}/routes/676dac2e227824fedb4949ad/start
 
 ### GET /routes
 GET {{host}}:{{port}}/routes

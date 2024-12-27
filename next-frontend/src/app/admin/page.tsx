@@ -13,15 +13,16 @@ export function AdminPage() {
       return;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    socket.disconnected ? socket.connect() : socket.offAny();
+    socket.connect();
 
     socket.on(
       `server:new-points:list`,
       async (data: { route_id: string; lat: number; lng: number }) => {
-        console.log(data);
+        // console.log(data);
         if (!map.hasRoute(data.route_id)) {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_NEXT_API_URL}/api/routes/${data.route_id}`)
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_NEXT_API_URL}/api/routes/${data.route_id}`
+          );
           const route = await response.json();
           map.addRouteWithIcons({
             routeId: data.route_id,
