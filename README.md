@@ -2,40 +2,54 @@
 
 ![Imersão Full Stack && Full Cycle](https://events-fullcycle.s3.amazonaws.com/events-fullcycle/static/site/img/grupo_4417.png)
 
-Participe gratuitamente: https://imersao.fullcycle.com.br/
+Participe gratuitamente: [https://imersao.fullcycle.com.br/](https://imersao.fullcycle.com.br/)
 
-## Requerimentos
+## **Requerimentos**
 
 Cada projeto tem seus próprios requerimentos, mas uma ferramenta é comum a todos: o Docker.
 
-### Docker
+### **Docker**
 
 Dependendo do seu sistema operacional, você tem 2 opções para instalar o Docker:
 
-- [Docker Desktop] - Interface gráfica para gerenciar e usar o Docker.
-- [Docker Engine] - Apenas a engine do Docker, sem interface gráfica, chamado de Docker Nativo.
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) - Interface gráfica para gerenciar e usar o Docker.
+- [Docker Engine](https://docs.docker.com/engine/install/) - Apenas a engine do Docker, sem interface gráfica (Docker Nativo).
 
-Se você tem 8GB ou menos de memória RAM, recomendamos o uso do Docker Engine, pois a interface gráfica do Docker Desktop + a execução dos containers pode consumir praticamente a memória da máquina, caso contrário usar o Docker Desktop é mais prático.
+Se você tem **8GB ou menos de memória RAM**, recomendamos o uso do **Docker Engine**, pois o Docker Desktop pode consumir muitos recursos. Caso contrário, o Docker Desktop é mais prático.
 
-Se você quiser saber mais detalhes sobre isto, veja nosso vídeo [https://www.youtube.com/watch?v=99dCerRKO6s](https://www.youtube.com/watch?v=99dCerRKO6s).
+Saiba mais: [https://www.youtube.com/watch?v=99dCerRKO6s](https://www.youtube.com/watch?v=99dCerRKO6s).
 
-Se você estiver no Windows, use o WSL 2. Veja nosso tutorial [https://github.com/codeedu/wsl2-docker-quickstart](https://github.com/codeedu/wsl2-docker-quickstart).
+Se você estiver no Windows, use o **WSL 2**. Veja nosso tutorial: [https://github.com/codeedu/wsl2-docker-quickstart](https://github.com/codeedu/wsl2-docker-quickstart).
 
-## Rodar a aplicação
+---
 
-Rode todas as aplicações com o comando:
+## **Rodar a aplicação**
+
+Antes de rodar a aplicação, certifique-se de que você tem o **Docker** e o **Docker Compose** instalados.
+
+### **1. Subindo os containers**
+Execute o seguinte comando para iniciar todos os serviços necessários:
 
 ```bash
 docker-compose up -d
 ```
 
-Este comando irá subir todos os containers necessários para rodar todo o projeto
+> 💡 *Este comando irá baixar e rodar todas as dependências do projeto, incluindo o banco de dados, backend, frontend e simulador.*
 
-Acesse as pastas `golang-simulator`, `nestjs-api` e `next-frontend` e siga as instruções.
+### **2. Acessando os serviços**
+Após subir os containers, utilize os comandos abaixo para rodar cada serviço.
 
-Como você já vai ter rodado todos os containers com o comando acima, mas instruções pule o passo de *levantar os containers*
+| **Serviço** | **Pasta do projeto** | **Comando para acessar o container** | **Comando para iniciar** |
+|-------------|---------------------|--------------------------------|----------------------|
+| **Simulador (Go)** | `golang-simulator` | `docker compose exec simulator sh` | `go run cmd/simulator/main.go` |
+| **Backend (NestJS - API)** | `nestjs-api` | `docker compose exec nest bash` | `npm run start:dev` |
+| **Backend (NestJS - Consumer)** | `nestjs-api` | `docker compose exec nest bash` | `npm run start:dev -- --entryFile=cmd/kafka.cmd` |
+| **Frontend (Next.js)** | `next-frontend` | `docker compose exec next bash` | `npm run dev` |
 
+> ⚠️ *Como você já subiu os containers, não é necessário rodar comandos como `docker-compose up` dentro das pastas individuais.*
 
-## Arquitetura do projeto
+---
 
-![alt text](./arquitetura_projeto.png)
+## **Arquitetura do projeto**
+
+![Arquitetura do projeto](./arquitetura_projeto.png)

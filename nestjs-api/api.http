@@ -1,7 +1,7 @@
 @host=http://localhost
 @port=3000
 @consultaOrigem=Avenida Lisboa, 234, Contagem, MG
-@consultaDestino=Rua Carlos da Cunha Peixoto, 108, Jequitinhonha, MG
+@consultaDestino=Rua Carlos da Cunha Peixoto, 1080, Jequitinhonha, MG
 
 @originId=
 @destinationId=
@@ -26,7 +26,7 @@ POST {{host}}:{{port}}/routes
 Content-Type: application/json
 
 {
-  "name": "Contagem > Jequi 3",
+  "name": "Contagem > Jequi 1",
   "source_id": "{{ originId }}",
   "destination_id": "{{ destinationId }}"
 }
